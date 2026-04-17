@@ -5,6 +5,10 @@ import Layout from "../layouts/Layout.astro";
 import type { Place } from "../generated/prisma/client";
 
 const { data: places } = await Astro.callAction(actions.getPlaces, {});
+
+if (!places) {
+  throw new Error("No data returned from actions.getPlaces");
+}
 ---
 
 <Layout>
