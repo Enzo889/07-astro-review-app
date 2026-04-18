@@ -15,8 +15,6 @@ import Availability from "../../components/Availability.astro";
 export const getStaticPaths = async () => {
   const places = await prisma.place.findMany();
 
-  console.log("places encontrados:", places.length); // verificar
-
   return places.map((place) => ({
     params: { id: String(place.id) },
     props: { place },
@@ -33,50 +31,62 @@ const { id } = Astro.params;
 const imageUrl = `/assets/images/${place.image}`;
 ---
 
-<Layout title={`${place.title} - Astro Review`}>
-  <div
-    class="max-w-2xl mx-auto flex gap-5 bg-white shadow-md rounded-lg p-5 dark:bg-gray-800 dark:border-gray-700"
-  >
-    <div class="flex flex-col">
-      <a href="javascript:history.back()" class="p-2 hover:text-gray-500 w-fit"
-        >← Volver</a
-      >
-      <h3
-        class="text-gray-900 font-semibold text-xl tracking-tight dark:text-white"
-      >
-        #{place.id}
-        {place.title}
-      </h3>
-      <p class="text-pretty">{place.description}</p>
-      <div class="px-5 pb-5">
-        <div class="flex mt-2.5 mb-5">
-          {Array.from({ length: Number(place.avg_rating) }).map(() => <Star />)}
-          <span
-            class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-3"
-            >{place.avg_rating}</span
-          >
-        </div>
+<Layout title={`${place.title} — Astro Server Islands`}>
+  <div class="detail-page">
+    <!-- Back -->
+    <a href="/" class="detail-back">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5" />
+        <path d="M12 19l-7-7 7-7" />
+      </svg>
+      Volver a todos los lugares
+    </a>
+
+    <!-- Detail Card -->
+    <div class="detail-content animate-in">
+      <div class="detail-image-wrapper">
+        <Image
+          src={imageUrl}
+          alt={place.title}
+          width={600}
+          height={600}
+        />
       </div>
 
-      <Availability placeId={place.id.toString()} server:defer>
-        <p
-          slot="fallback"
-          class="bg-gray-600 mt-5 text-center rounded-xl p-2 animate-pulse"
-        >
-          Consultando...
-        </p>
-      </Availability>
+      <div class="detail-info">
+        <span class="detail-id">Lugar #{place.id}</span>
+        <h1 class="detail-title">{place.title}</h1>
+        <p class="detail-description">{place.description}</p>
+
+        <div class="detail-rating">
+          <div class="place-card-stars">
+            {Array.from({ length: Number(place.avg_rating) }).map(() => <Star />)}
+          </div>
+          <span class="rating-badge">{place.avg_rating}</span>
+        </div>
+
+        <!-- Availability (Server Island) -->
+        <Availability placeId={place.id.toString()} server:defer>
+          <p slot="fallback" class="availability-fallback">
+            🏝️ Cargando Server Island…
+          </p>
+        </Availability>
+      </div>
     </div>
-    <div
-      class="bg-white shadow-md rounded-lg max-w-sm overflow-hidden dark:bg-gray-800 dark:border-gray-700"
-    >
-      <Image
-        class="rounded-lg p-1"
-        src={imageUrl}
-        alt={place.title}
-        width={500}
-        height={500}
-      />
+
+    <!-- Server Island Callout -->
+    <div class="server-island-callout animate-in animate-delay-2">
+      <div class="server-island-callout-header">
+        <span>🏝️</span>
+        Server Island en Acción
+      </div>
+      <p>
+        La <strong>verificación de disponibilidad</strong> de arriba es un <strong>Server Island</strong>.
+        Toda esta página fue pre-renderizada como HTML estático en tiempo de compilación, pero el
+        componente de disponibilidad está marcado con <code>server:defer</code> — se renderiza en
+        el servidor en tiempo de solicitud y se transmite a la página después de la carga inicial.
+        Esto te da cargas de página instantáneas con datos frescos y dinámicos exactamente donde los necesitas.
+      </p>
     </div>
   </div>
 </Layout>

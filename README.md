@@ -1,46 +1,73 @@
-# Astro Starter Kit: Basics
+# 🏝️ Astro Server Islands — App de Reseñas
 
-```sh
-bun create astro@latest -- --template basics
-```
+Una aplicación de demostración construida con **Astro** que muestra el patrón **Server Islands** (`server:defer`). Las páginas se pre-renderizan como HTML estático en tiempo de compilación, mientras que los componentes dinámicos se difieren al servidor y se transmiten bajo demanda.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## ✨ Características
 
-## 🚀 Project Structure
+- **Server Islands**: El componente de disponibilidad se carga dinámicamente usando `server:defer`, demostrando cómo mezclar contenido estático y dinámico
+- **Modo Oscuro/Claro**: Toggle de tema con persistencia en `localStorage`
+- **Diseño Editorial**: Estética magazine con tipografía Playfair Display + Source Sans 3
+- **Prisma + PostgreSQL**: Base de datos para los lugares y sus reseñas
+- **Astro Actions**: Acciones del servidor para obtener datos de forma type-safe
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🚀 Estructura del Proyecto
 
 ```text
 /
+├── prisma/
+│   └── schema.prisma          # Esquema de la base de datos
 ├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
+│   └── assets/images/         # Imágenes de los lugares
+├── src/
+│   ├── actions/
+│   │   └── places/            # Acciones: getPlaces, getAvailabilityById
+│   ├── components/
+│   │   ├── Availability.astro # 🏝️ Server Island (server:defer)
+│   │   ├── PlaceCard.astro    # Tarjeta de lugar
+│   │   ├── Star.astro         # Estrella de rating
+│   │   └── ThemeToggle.astro  # Toggle oscuro/claro
+│   ├── layouts/
+│   │   └── Layout.astro       # Layout principal con navbar y footer
+│   ├── lib/
+│   │   └── prisma.ts          # Cliente de Prisma
+│   ├── pages/
+│   │   ├── index.astro        # Página principal
+│   │   └── places/[id].astro  # Página de detalle
+│   └── styles/
+│       └── global.css         # Sistema de diseño CSS
 └── package.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 🧞 Comandos
 
-## 🧞 Commands
+Todos los comandos se ejecutan desde la raíz del proyecto:
 
-All commands are run from the root of the project, from a terminal:
+| Comando             | Acción                                             |
+| :------------------ | :------------------------------------------------- |
+| `bun install`       | Instala las dependencias                           |
+| `bun dev`           | Inicia el servidor de desarrollo en `localhost:4321`|
+| `bun build`         | Compila el sitio de producción en `./dist/`        |
+| `bun preview`       | Previsualiza la build localmente                   |
+| `bun astro ...`     | Ejecuta comandos CLI como `astro add`, `astro check`|
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
+## 🏝️ ¿Qué son las Server Islands?
 
-## 👀 Want to learn more?
+Las **Server Islands** son una característica de Astro que permite diferir el renderizado de componentes específicos al servidor en tiempo de solicitud, mientras el resto de la página se sirve como HTML estático.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```astro
+<!-- La página es estática, pero este componente se renderiza en el servidor bajo demanda -->
+<Availability placeId={id} server:defer>
+  <p slot="fallback">🏝️ Cargando Server Island…</p>
+</Availability>
+```
+
+**Beneficios:**
+- ⚡ Carga instantánea de la página (HTML estático)
+- 🔄 Datos frescos donde los necesitas (componentes dinámicos)
+- 🎯 Lo mejor de ambos mundos: rendimiento + dinamismo
+
+## 📚 Más información
+
+- [Documentación de Astro](https://docs.astro.build)
+- [Guía de Server Islands](https://docs.astro.build/en/guides/server-islands/)
+- [Astro Actions](https://docs.astro.build/en/guides/actions/)

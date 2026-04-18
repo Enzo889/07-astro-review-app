@@ -1,26 +1,89 @@
 ---
 import "../styles/global.css";
+import ThemeToggle from "../components/ThemeToggle.astro";
 
 interface Props {
   title?: string;
 }
 
-const { title = "Astro Review" } = Astro.props;
+const { title = "Astro Server Islands — App de Reseñas" } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="es" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
+    <meta
+      name="description"
+      content="Explora Astro Server Islands: una app de demostración que muestra cómo Astro difiere componentes dinámicos dentro de páginas estáticas para un rendimiento óptimo."
+    />
     <title>{title}</title>
   </head>
-  <body
-    class="dark:bg-gray-900 bg-gray-200 dark:text-white text-gray-900 container m-auto max-w-4xl px-5 my-10"
-  >
-    <slot />
+  <body>
+    <div class="site-container">
+      <!-- Navbar -->
+      <nav class="navbar">
+        <a href="/" class="navbar-brand">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              d="M15.75 8.25a.75.75 0 01.75.75c0 1.12-.492 2.126-1.27 2.812a.75.75 0 11-.992-1.124A2.243 2.243 0 0015 9a.75.75 0 01.75-.75z"
+            ></path>
+            <path
+              fill-rule="evenodd"
+              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM4.575 15.6a8.25 8.25 0 009.348 4.425 1.966 1.966 0 00-1.84-1.275.983.983 0 01-.97-.822l-.073-.437c-.094-.565.25-1.11.8-1.267l.99-.282c.427-.122.708-.53.654-.968a5.984 5.984 0 01-3.668-1.51.75.75 0 01.158-1.23 8.25 8.25 0 01-5.4 1.566z"
+              clip-rule="evenodd"></path>
+          </svg>
+          Server Islands
+        </a>
+        <div class="navbar-right">
+          <ThemeToggle />
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main>
+        <slot />
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>
+          Demostrando el patrón
+          <a
+            href="https://docs.astro.build/en/guides/server-islands/"
+            target="_blank"
+            rel="noopener">Server Islands</a
+          >. Hecho con <a
+            href="https://astro.build"
+            target="_blank"
+            rel="noopener">Astro</a
+          > por <a
+            href="https://github.com/Enzo889"
+            target="_blank"
+            rel="noopener">Enzo Bustamante</a
+          >
+        </p>
+      </footer>
+    </div>
+
+    <!-- Theme initialization (prevents flash) -->
+    <script is:inline>
+      (function () {
+        const saved = localStorage.getItem("theme");
+        const preferred = window.matchMedia("(prefers-color-scheme: dark)")
+          .matches
+          ? "dark"
+          : "light";
+        document.documentElement.setAttribute("data-theme", saved || preferred);
+      })();
+    </script>
   </body>
 </html>

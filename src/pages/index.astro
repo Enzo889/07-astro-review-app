@@ -12,8 +12,60 @@ if (!places) {
 ---
 
 <Layout>
-  <h1>Astro Review</h1>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    {places.map((place: Place) => <PlaceCard place={place} />)}
+  <!-- Sección Hero -->
+  <section class="hero animate-in">
+    <span class="hero-badge"> server:defer </span>
+    <h1>
+      Astro <span class="accent">Server Islands</span>
+    </h1>
+    <p class="hero-subtitle">
+      Las Server Islands te permiten diferir el renderizado de componentes
+      dinámicos dentro de páginas estáticas. La página carga instantáneamente
+      como HTML estático, y luego los componentes individuales se renderizan en
+      el servidor y se transmiten — obteniendo lo mejor de ambos mundos.
+    </p>
+  </section>
+
+  <!-- Cómo Funciona -->
+  <div class="how-it-works animate-in animate-delay-1">
+    <div class="how-step">
+      <div class="how-step-icon static">⚡</div>
+      <h3>Página Estática</h3>
+      <p>
+        La página se pre-renderiza en tiempo de compilación como HTML estático
+        para carga instantánea
+      </p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-icon island">🏝️</div>
+      <h3>Server Island</h3>
+      <p>
+        Los componentes dinámicos marcados con <code>server:defer</code> se difieren
+        al tiempo de ejecución
+      </p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-icon dynamic">✨</div>
+      <h3>Contenido Dinámico</h3>
+      <p>
+        Los componentes diferidos se renderizan en el servidor y se transmiten a
+        la página sin interrupciones
+      </p>
+    </div>
+  </div>
+
+  <!-- Sección de Lugares -->
+  <div class="section-heading animate-in animate-delay-2">
+    <h2>Lugares para Visitar</h2>
+  </div>
+
+  <div class="places-grid">
+    {
+      places.map((place: Place, i: number) => (
+        <div class={`animate-in animate-delay-${i + 1}`}>
+          <PlaceCard place={place} />
+        </div>
+      ))
+    }
   </div>
 </Layout>
